@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.dawdle.blog.dao.BlogDao">
+
+    <resultMap id="User" type="com.dawdle.blog.pojo.User">
+        <id property="id" column="id"/>
+        <result property="nickname" column="nickname"/>
+        <result property="username" column="username"/>
+        <result property="email" column="email"/>
+        <result property="avatar" column="avatar"/>
+    </resultMap>
+
+    <resultMap id="blog" type="com.dawdle.blog.vo.BlogQuery">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="recommend" column="recommend"/>
+        <result property="publish" column="publish"/>
+        <result property="typeId" column="type_id"/>
+        <association property="type" javaType="com.dawdle.blog.pojo.Type">
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+        </association>
+    </resultMap>
+
+
+    <select id="getBlogList" resultMap="blog">
+        select b.id,b.title,b.update_time,b.recommend,b.publish,b.type_id,t.id,t.name from t_blog b left outer join
+                                                                                             t_type t on b.type_id = t.id order by b.update_time desc
+    </select>
+
+    <insert id="saveBlog" parameterType="com.dawdle.blog.pojo.Blog">
+        insert into t_blog (id,title, content, first_picture, flag,
+                                 `view`, appreciate, `share`, `comment`,publish,
+                                 recommend, create_time, update_time, type_id, user_id, `description`)
+        values (#{id},#{title},#{content},#{firstPicture},#{flag},#{view},#{appreciate},
+                #{share},#{comment},#{publish},#{recommend},#{createTime},
+                #{updateTime},#{typeId},#{userId},#{description})
+    </insert>
+
+    <resultMap id="showBlog" type="com.dawdle.blog.vo.ShowBlog">
+        <id property="id" column="id"/>
+        <result property="flag" column="flag"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="typeId" column="type_id"/>
+        <result property="firstPicture" column="first_picture"/>
+        <result property="description" column="description"/>
+        <result property="recommend" column="recommend"/>
+        <result property="publish" column="publish"/>
+        <result property="share" column="share"/>
+        <result property="appreciate" column="appreciate"/>
+        <result property="comment" column="comment"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="getBlogById" resultMap="showBlog">
+        select b.id,b.flag,b.title,b.content,b.type_id,
+               b.first_picture,b.description,b.recommend,b.publish,b.share,
+               b.appreciate,b.comment from t_blog b  where  b.id = #{id}
+
+    </select>
+
+    <update id="updateBlog" parameterType="com.dawdle.blog.vo.ShowBlog">
+        update t_blog set publish = #{publish},flag = #{flag} ,
+                                 title = #{title}, content = #{content}, type_id = #{typeId},
+                                 first_picture = #{firstPicture} , description = #{description} , recommend = #{recommend} ,
+                                 share = #{share}, appreciate = #{appreciate},
+                                 comment = #{comment} ,update_time = #{updateTime} where id = #{id}
+
+    </update>
+
+    <delete id="deleteBlogById">
+        delete from t_blog where id = #{id}
+    </delete>
+
+    <select id="searchBlogByAdmin" parameterType="com.dawdle.blog.vo.SearchBlog" resultMap="blog">
+        <bind name="pattern" value="'%' + title + '%'" />
+        select b.id,b.title,b.update_time,b.recommend,b.type_id,t.id,t.name from t_blog b ,t_type t
+        <where>
+            <if test="1 == 1">
+                b.type_id = t.id
+            </if>
+            <if test="typeId != null">
+                and b.type_id = #{typeId}
+            </if>
+            <if test="title != null">
+                and b.title like #{pattern}
+            </if>
+            <if test="recommend != false">
+                and b.recommend = #{recommend}
+            </if>
+        </where>
+
+    </select>
+
+    <resultMap id="firstPageBlog" type="com.dawdle.blog.vo.FirstPageBlog">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="firstPicture" column="first_picture"/>
+        <result property="view" column="view"/>
+<!--        <result property="commentCount" column="comment_count"/>-->
+        <result property="updateTime" column="update_time"/>
+        <result property="description" column="description"/>
+
+        <result property="typeName" column="name"/>
+
+        <result property="nickname" column="nickname"/>
+        <result property="avatar" column="avatar"/>
+        <result property="typeId" column="type_id"/>
+    </resultMap>
+
+    <select id="getAllFirstPageBlog" resultMap="firstPageBlog">
+        select b.id,b.title,b.first_picture, b.view, b.update_time,b.description,b.type_Id,
+               t.name ,
+               u.nickname, u.avatar
+        from t_blog b, t_type t,t_user u
+        where b.type_id = t.id and  u.id = b.user_id order by b.update_time desc
+    </select>
+
+    <resultMap id="MyRecommendBlog" type="com.dawdle.blog.vo.RecommendBlog">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="recommend" column="recommend"/>
+        <result property="firstPicture" column="first_picture"/>
+    </resultMap>
+
+    <!--推荐文章-->
+    <select id="recommendBlogs" resultMap="MyRecommendBlog">
+        select * from t_blog where recommend = true order by update_time desc limit 4;
+    </select>
+
+    <select id="searchBlog" resultMap="firstPageBlog">
+        <bind name="pattern" value="'%' + query + '%'" />
+        select b.id,b.title,b.first_picture, b.view,b.update_time,b.description,
+        t.name,
+        u.nickname, u.avatar
+        from t_blog b,t_type t,t_user u
+        where b.type_id = t.id and  u.id = b.user_id and (b.title like #{pattern} or b.content like #{pattern} or b.description like #{pattern})
+        order by b.update_time desc
+    </select>
+    <select id="getBlogByTypeId" resultMap="firstPageBlog">
+        select b.id,b.title,b.first_picture, b.view, b.update_time, b.description,
+               t.name ,
+               u.nickname, u.avatar
+        from myblog.t_blog b, myblog.t_type t,myblog.t_user u
+        where b.type_id = t.id and u.id = b.user_id and b.type_id = #{typeId} order by b.update_time desc
+    </select>
+
+    <select id="getDetailBlogById" resultType="com.dawdle.blog.vo.DetailedBlog">
+        select b.id,b.first_picture,b.flag,b.title,b.content,b.view,b.update_time,b.comment,b.share,b.appreciate, u.nickname,u.avatar,t.name
+        from t_blog b,t_user u, t_type t
+        where b.user_id = u.id and b.type_id = t.id and b.id = #{id}
+    </select>
+
+    <update id="updateView" parameterType="com.dawdle.blog.vo.DetailedBlog">
+        update t_blog set `view` = `view` + 1 where id = #{id}
+    </update>
+
+    <select id="getAll" resultMap="blog">
+        select id,title,update_time from t_blog
+    </select>
+</mapper>

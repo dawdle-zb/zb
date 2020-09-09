@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="admin/_fragments :: head(~{::title})">
+    <title>博客管理</title>
+</head>
+<body>
+<!--nav:导航部分-->
+<!--条:segment;黑色:inverted反转色-->
+<nav th:replace="admin/_fragments :: menu(1)"/>
+<div class="ui attached pointing menu">
+    <div class="ui container">
+        <div class="right menu">
+            <a href="#" th:href="@{/admin/blogs/input}" class=" item">发布</a>
+            <a href="#" th:href="@{/admin/blogs}" class="teal active item">列表</a>
+        </div>
+    </div>
+</div>
+<!--中间部分-->
+<div class="m-container-small m-padded-tb-big">
+    <div class="ui success message" th:unless="${#strings.isEmpty(msg)}">
+        <i class="close icon"></i>
+        <div class="" th:text="|提示： ${msg}">提示：操作成功！</div>
+    </div>
+    <div class="ui container">
+        <div class="ui secondary segment form">
+            <input type="hidden" name="page">
+            <div class="inline fields">
+                <div class="field">
+                    <input id="tit" type="text" name="title" placeholder="标题">
+                </div>
+                <div class="field">
+                    <div class="ui labeled action input">
+                        <div class="ui type selection dropdown">
+                            <input type="hidden" name="typeId">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">分类</div>
+                            <div class="menu">
+                                <div th:each="type : ${types}" class="item" data-value="1" th:data-value="${type.id}" th:text="${type.name}">生活</div>
+                            </div>
+                        </div>
+                        <button id="clear-btn" class="ui compact button">clear</button>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui checkbox">
+                        <input type="checkbox" id="recommend" name="recommend">
+                        <label for="recommend">推荐</label>
+                    </div>
+                </div>
+                <div class="field">
+                    <button type="button" id="search-btn" class="ui small teal button"><i
+                            class="search icon"></i>搜索
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="table-container">
+            <table th:fragment="blogList" class="ui compact teal table">
+                <thead>
+                <tr align="center">
+                    <th>序号</th>
+                    <th>标题</th>
+                    <th>类型</th>
+                    <th>状态</th>
+                    <th>推荐</th>
+                    <th>最后更新时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr align="center" th:each="blog,iterStat : ${page.list}">
+                    <td th:text="${iterStat.count}">1</td>
+                    <td><a href="#" target="_blank" class="m-teal" th:text="${blog.title}">1</a></td>
+
+                    <td th:text="${blog.type.name}">学习</td>
+                    <td th:text="${blog.publish} ? '发布':'草稿'">发布</td>
+                    <td th:text="${blog.recommend} ? '是':'否'">推荐</td>
+                    <td th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd hh:mm:ss')}">2020-07-31 14:38:16</td>
+                    <td>
+                        <a href="#" th:href="@{/admin/blogs/{id}/input(id=${blog.id})}" class="ui mini teal basic button">编辑</a>
+                        <a href="#" th:href="@{/admin/blogs/{id}/delete(id=${blog.id})}" onclick='return del();'
+                           class="ui mini red basic button">删除</a>
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th colspan="8">
+                        <div class="ui inverted divided stackable grid">
+                            <div class="three wide column" align="center">
+                                <a class="ui small inverted red button" th:href="@{/admin/blogs(pageNum=${page.hasPreviousPage}?${page.prePage}:1)}" th:unless="${page.isFirstPage}"><i class="left arrow icon"></i>上一页</a>
+                            </div>
+                            <div class="ten wide column" align="center">
+                                <p>第 <span th:text="${page.pageNum}"></span> 页，共 <span th:text="${page.pages}"></span> 页，有 <span th:text="${page.total}"></span> 篇文章</p>
+                            </div>
+
+                            <div class="three wide column" align="center">
+                                <a class="ui small inverted red button" th:href="@{/admin/blogs(pageNum=${page.hasNextPage}?${page.nextPage}:${page.pages})}" th:unless="${page.isLastPage}">下一页<i class="right arrow icon"></i></a>
+                            </div>
+                        </div>
+                        <div align="right">
+                            <a href="#" th:href="@{/admin/blogs/input}">
+                                <button type="button" class="ui teal button m-mobile-wide m-margin-top"><i class="pencil icon"></i>新增</button>
+                            </a>
+                        </div>
+                    </th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<!--底部footer-->
+<footer th:replace="admin/_fragments :: footer"/>
+<f th:replace="admin/_fragments :: f" />
+<script>
+    <!--移动端点击图标显示导航-->
+    $('.menu.toggle').click(
+        function () {
+            $('.m-item').toggleClass('m-mobile-hide');
+        }
+    );
+    //清除查询条件
+    $('#clear-btn')
+        .on('click', function () {
+            $('.ui.type.dropdown')
+                .dropdown('clear')
+            ;
+            //清除文本框文字
+            $("#tit").val("");
+        });
+
+    function page(obj) {
+        $("[name='page']").val($(obj).data("page"));
+        loaddata();
+    }
+
+    $("#search-btn").click(function () {
+        $("[name='page']").val(0);
+        loaddata();
+    });
+
+    //查询数据
+    function loaddata() {
+        $("#table-container").load(/*[[@{/admin/blogs/search}]]*/"/admin/blogs/search",{
+            title : $("[name='title']").val(),
+            typeId : $("[name='typeId']").val(),
+            recommend : $("[name='recommend']").prop('checked'),
+            page : $("[name='page']").val()
+        });
+    }
+
+
+</script>
+</body>
+</html>

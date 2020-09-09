@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:margin-rigth="http://www.w3.org/1999/xhtml">
+<head th:replace="_fragments :: head(~{::title})">
+  <title>博客</title>
+</head>
+<body>
+
+  <!--导航-->
+  <nav th:replace="_fragments :: menu(1)"/>
+
+  <!--中间内容-->
+  <div id="waypoint" class="m-padded-tb-big animated bounceInUp">
+  <div class="m-padded-tb-big animated fadeIn">
+    <div class="ui container">
+      <div class="ui stackable grid">
+        <!--博客内容-->
+        <div class="ui vertical segment">
+          <div class="ui m-container-small m-opacity">
+            <div class="ui secondary segment" align="center">
+              <a style="color: black"><i class="bookmark icon"></i>最新文章</a>
+            </div>
+          </div>
+          <!--博文列表-->
+          <div class="ui padded segment m-padded-tb-large m-opacity" th:each="blog : ${page.list}">
+            <div class="ui large aligned mobile reversed stackable grid">
+              <!--博文信息-->
+              <div class="eleven wide column animated fadeIn">
+                <h3 class="ui header" ><a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="m-black m-title-font" th:text="${blog.title}">#</a></h3>
+                <p class="m-text m-margin-top-max" th:text="|${blog.description}......|">.</p>
+                <div class="ui m-margin-top-max grid">
+                  <div class="eleven wide column">
+                    <div class="ui horizontal link list">
+                      <div class="item">
+                        <img src="#" th:src="@{${blog.avatar}}"  alt="" class="ui avatar image">
+                        <div class="content"><a href="#" th:href="@{/about}" target="_blank" class="header" th:text="${blog.nickname}" >#</a></div>
+                      </div>
+                      <div class="item">
+                        <a style="color: #919191"><i class="calendar icon"></i><span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd')}">#</span></a>
+                      </div>
+                      <div class="item">
+                        <a style="color: #919191"><i class="eye icon"></i> <span th:text="${blog.view}">2222</span></a>
+                      </div>
+<!--                      <div class="item">-->
+<!--                        <i class="comment outline icon"></i> <span th:text="${blog.commentCount}">2222</span>-->
+<!--                      </div>-->
+                    </div>
+                  </div>
+                  <div class="right aligned five wide column">
+                    <a href="#" th:href="@{/types/{id}(id=${blog.typeId})}" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin" th:text="${blog.typeName}">#</a>
+                  </div>
+                </div>
+              </div>
+              <!--博文图片-->
+              <div class="five wide column">
+                <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank">
+                  <img src="#" th:src="@{${blog.firstPicture}}" height="200" width="320"  alt="" class="ui rounded image">
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--分页-->
+        <div class="ui bottom attached segment m-opacity stackable grid">
+          <div class="three wide column" align="center">
+            <a class="item" th:href="@{/(pageNum=${page.hasPreviousPage}?${page.prePage}:1)}" th:unless="${page.isFirstPage}">上一页</a>
+          </div>
+
+          <div class="ten wide column" align="center">
+            <p> <span th:text="${page.pageNum}"></span> / <span th:text="${page.pages}"></span> </p>
+          </div>
+
+          <div class="three wide column" align="center">
+            <a class="item" th:href="@{/(pageNum=${page.hasNextPage}?${page.nextPage}:${page.pages})}" th:unless="${page.isLastPage}">下一页</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--最新推荐-->
+  <div class="ui m-padded-tb-large">
+    <div class="ui m-container-small m-opacity">
+      <div class="ui secondary segment " align="center">
+        <a style="color: black"><i class="bookmark icon"></i>看一看</a>
+
+      </div>
+    </div>
+    <div class="ui stackable m-container-mini m-opacity grid">
+      <div class="m-margin-tb-tiny four wide column" th:each="blog : ${recommendBlogs}">
+        <a href="#" class="class_outer" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank">
+          <img src="#" th:src="@{${blog.firstPicture}}" height="200" width="320"  alt="" class="ui rounded image">
+          <span class="class_cover" >
+            <h4 class="m-font-size-blog-text m-margin-tb-tiny" th:text="${blog.title}">#</h4>
+          </span>
+        </a>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div id="toolbar" class="m-padded m-fixed m-left-bottom" style="display: none">
+    <div class="ui vertical icon buttons ">
+      <embed src="//music.163.com/outchain/player?type=2&id=28285910&auto=0&height=66" width="180" height="86"  allowNetworking="all"></embed>
+    </div>
+  </div>
+  <!--底部footer-->
+  <footer th:replace="_fragments :: footer"/>
+  <f th:replace="_fragments :: f"/>
+
+  <script>
+    $('.menu.toggle').click(function () {
+      $('.m-item').toggleClass('m-mobile-hide');
+    });
+    //滚动检测，根据waypoint来隐藏或显示toolbar
+    var waypoint = new Waypoint({
+      element: document.getElementById('waypoint'),
+      handler: function () {
+        $('#toolbar').show(0);
+        console.log('Scrolled to waypoint!  ' + direction);
+      }
+    });
+  </script>
+</body>
+</html>

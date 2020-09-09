@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="_fragments :: head(~{::title})">
+    <title>关于我</title>
+</head>
+<body>
+<!--nav:导航部分-->
+<!--条:segment;黑色:inverted反转色-->
+<nav th:replace="_fragments :: menu(4)"/>
+
+
+<!--中间部分-->
+<div class="m-container m-padded-tb-big">
+    <div class="ui container">
+        <div class="ui stackable grid">
+            <!-- 图片十一份-->
+            <div class="eleven wide column animated slideInLeft">
+                <div class="ui segment">
+                    <img src="#" th:src="@{\images\0.jpg}" alt="" class="ui rounded image">
+                </div>
+            </div>
+            <!-- 关于我 5份-->
+            <div class="five wide column animated slideInRight">
+                <div class="ui top attached segment">
+                    <div class="ui header">关于我</div>
+                </div>
+                <div class=" ui attached segment">
+                    <p class="m-text"> 周~， 一个终身学习者，折腾在0 与 1 世界的青年，誓将学习无限循环，希望可以结识可以共同成长的小伙伴。</p>
+                    <p class="m-text"> 热爱编程，正在探索高效学习编程技术的方法...</p>
+                </div>
+
+                <div class=" ui attached segment">
+                    <div class="ui orange basic label">编程</div>
+                    <div class="ui orange basic label">运动</div>
+                    <div class="ui orange basic label">写作</div>
+                </div>
+
+                <div class=" ui attached segment">
+                    <div class="ui teal basic label m-margin-tb-tiny">java</div>
+                    <div class="ui teal basic label m-margin-tb-tiny">c++</div>
+                    <div class="ui teal basic label m-margin-tb-tiny">javascript</div>
+                    <div class="ui teal basic label m-margin-tb-tiny">MYSQL</div>
+                    <div class="ui teal basic label m-margin-tb-tiny">...</div>
+                </div>
+
+                <div class="ui bottom attached segment">
+                    <a href="#" class="ui circular icon button"><i class="github icon"></i></a>
+                    <a href="#" class="ui wechat circular icon button"><i class="weixin icon"></i></a>
+                    <a href="#" class="ui qq circular icon button" data-content="352889727" data-position="top center"><i class="qq icon"></i></a>
+                </div>
+                <div class="ui wechat-qr flowing popup transition hidden">
+                    <img src="#" th:src="@{/images/erweima.png}" alt="" class="ui rounded image" style="width: 120px">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--页脚-->
+<footer th:replace="_fragments :: footer"/>
+<f th:replace="_fragments :: f" />
+
+<script>
+    <!--移动端点击图标显示导航-->
+    $('.menu.toggle').click(
+        function () {
+            $('.m-item').toggleClass('m-mobile-hide');
+        }
+    );
+    $('.qq').popup();
+
+    $('.wechat').popup({
+        popup: $('.wechat-qr'),
+        // on : 'click',
+        position : 'top center',
+    });
+
+</script>
+
+</body>
+</html>
