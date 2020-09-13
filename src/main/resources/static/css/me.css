@@ -3,7 +3,7 @@ body {
     background: url("../images/nekopara.jpg");
     background-size: cover;
     background-repeat:no-repeat;
-    background-attachment:fixed
+    background-attachment:fixed;
 }
 .class_cover {
     width: 320px;
@@ -117,13 +117,62 @@ body {
 
 .m-margin-bottom-small {
     margin-bottom: 0.5em !important;
+}
+.m-margin-top-maxx {
+    margin-top: 5em !important;
+}
 
+.m-bg-class_outer {
+    display: block;
+    /*width: 550px;*/
+    /*height: 276px;*/
+    /*margin: 10px auto 0 0;*/
+    position: relative;
+    overflow: hidden;
+}
+.m-bg-class_cover {
+    width: 100%;
+    height: 750px;
+    line-height: 50px;
+    padding-left: 6px;
+    background-color: rgba(0, 0, 0, .60);
+    /*color: #FFFFFF;*/
+    /*font-size: 26px;*/
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
 }
 .m-title-font{
     font-family: STSong;
     font-weight: 900;
     font-size: x-large;
 }
+.m-font-size-title-mediul{
+    font-size: 30px;
+    color: #ffffff;
+    font-family: STSong;
+}
+.m-font-size-text-init-title{
+    font-size: 24px;
+    color: #fffffc;
+    align-content: center;
+    font-family:'STXingkai';
+}
+.m-font-size-text{
+    font-size: 30px;
+    color: #ffffff;
+    font-family: STXihei;
+}
+
+.r-x-box{ width:50px; border-left:0; border-right:0;border-bottom:0; left:0; position:fixed; left: 50%;
+    margin-left: 650px;
+    position: fixed;
+    bottom: 50px;
+    z-index:10000;
+}
+.r-x1{ width:50px; height:50px; cursor:pointer;}
+.r-x-7{ background:url(http://i.tq121.com.cn/i/news/right-d13.png) no-repeat;}
+.r-x-7:hover{ background:url(http://i.tq121.com.cn/i/news/right-d14.png) no-repeat;}
 
 /*-----opacity------*/
 .m-opacity {
@@ -166,6 +215,10 @@ body {
 }
 .m-container-small {
     max-width: 60em !important;
+    margin: auto !important;
+}
+.m-container-middle {
+    max-width: 65em !important;
     margin: auto !important;
 }
 

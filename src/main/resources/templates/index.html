@@ -1,122 +1,505 @@
+
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:margin-rigth="http://www.w3.org/1999/xhtml">
-<head th:replace="_fragments :: head(~{::title})">
-  <title>博客</title>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>...</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/animate.css" th:href="@{/css/animate.css}">
+    <link rel="stylesheet" href="../static/css/typo.css" th:href="@{/css/typo.css}">
+    <link rel="stylesheet" href="../static/lib/prism/prism.css" th:href="@{/lib/prism/prism.css}">
+    <link rel="stylesheet" href="../static/lib/tocbot/tocbot.css" th:href="@{/lib/tocbot/tocbot.css}">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+    <link rel="shortcut icon" href="/public/favicon.ico" th:href="@{/favicon.ico}"/>
+    <link rel="bookmark" href="/public/favicon.ico" th:href="@{/favicon.ico}"/>
+
+    <style type="text/css">
+
+        .hidden.menu {
+            display: none;
+        }
+
+        .masthead.segment {
+            min-height: 700px;
+            padding: 1em 0em;
+        }
+        .masthead .logo.item img {
+            margin-right: 1em;
+        }
+        .masthead .ui.menu .ui.button {
+            margin-left: 0.5em;
+        }
+        .masthead h1.ui.header {
+            margin-top: 3em;
+            margin-bottom: 0em;
+            font-size: 4em;
+            font-weight: normal;
+        }
+        .masthead h2 {
+            font-size: 1.7em;
+            font-weight: normal;
+        }
+
+        .ui.vertical.stripe {
+            padding: 8em 0em;
+        }
+        .ui.vertical.stripe h3 {
+            font-size: 2em;
+        }
+        .ui.vertical.stripe .button + h3,
+        .ui.vertical.stripe p + h3 {
+            margin-top: 3em;
+        }
+        .ui.vertical.stripe .floated.image {
+            clear: both;
+        }
+        .ui.vertical.stripe p {
+            font-size: 1.33em;
+        }
+        .ui.vertical.stripe .horizontal.divider {
+            margin: 3em 0em;
+        }
+
+        .quote.stripe.segment {
+            padding: 0em;
+        }
+        .quote.stripe.segment .grid .column {
+            padding-top: 5em;
+            padding-bottom: 5em;
+        }
+
+        .footer.segment {
+            padding: 5em 0em;
+        }
+
+        .secondary.pointing.menu .toc.item {
+            display: none;
+        }
+
+        @media only screen and (max-width: 700px) {
+            .ui.fixed.menu {
+                display: none !important;
+            }
+            .secondary.pointing.menu .item,
+            .secondary.pointing.menu .menu {
+                display: none;
+            }
+            .secondary.pointing.menu .toc.item {
+                display: block;
+            }
+            .masthead.segment {
+                min-height: 350px;
+            }
+            .masthead h1.ui.header {
+                font-size: 2em;
+                margin-top: 1.5em;
+            }
+            .masthead h2 {
+                margin-top: 0.5em;
+                font-size: 1.5em;
+            }
+        }
+        a { color: #3e465b; }
+        a:hover { color: #6c81ce; }
+
+
+
+    </style>
+
+
+
+
+    <script src=https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script type="text/javascript" src="https://cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
+    <script src="../static/lib/prism/prism.js" th:src="@{/lib/prism/prism.js}"></script>
+    <script src="../static/lib/tocbot/tocbot.min.js" th:src="@{/lib/tocbot/tocbot.min.js}"></script>
+    <script src="../static/lib/qrcode/qrcode.min.js" th:src="@{/lib/qrcode/qrcode.min.js}"></script>
+    <script src="../static/lib/waypoints/jquery.waypoints.min.js" th:src="@{/lib/waypoints/jquery.waypoints.min.js}"></script>
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?6b1eb02bacb648d682681dc81149e144";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+        $('.menu.toggle').click(function () {
+            $('.m-item').toggleClass('m-mobile-hide');
+        });
+    </script>
+    <script>
+        var now = new Date();
+        function createtime() {
+            var grt= new Date("8/31/2020 00:00:00");//在此处修改你的建站时间，格式：月/日/年 时:分:秒
+            now.setTime(now.getTime()+250);
+            days = (now - grt ) / 1000 / 60 / 60 / 24; dnum = Math.floor(days);
+            hours = (now - grt ) / 1000 / 60 / 60 - (24 * dnum); hnum = Math.floor(hours);
+            if(String(hnum).length ==1 ){hnum = "0" + hnum;} minutes = (now - grt ) / 1000 /60 - (24 * 60 * dnum) - (60 * hnum);
+            mnum = Math.floor(minutes); if(String(mnum).length ==1 ){mnum = "0" + mnum;}
+            seconds = (now - grt ) / 1000 - (24 * 60 * 60 * dnum) - (60 * 60 * hnum) - (60 * mnum);
+            snum = Math.round(seconds); if(String(snum).length ==1 ){snum = "0" + snum;}
+            document.getElementById("timeDate").innerHTML = "本站已安全运行 "+dnum+" 天 ";
+            document.getElementById("times").innerHTML = hnum + " 小时 " + mnum + " 分 " + snum + " 秒";
+        }
+        setInterval("createtime()",250);
+    </script>
+    <script type="text/javascript">
+        var a_idx = 0;
+        jQuery(document).ready(function($) {
+            $("body").click(function(e) {
+                var a = new Array("感","觉","自","己","萌","萌","哒");
+                var $i = $("<span/>").text(a[a_idx]);
+                a_idx = (a_idx + 1) % a.length;
+                var x = e.pageX,
+                    y = e.pageY;
+
+                const before = new Array('00', '11', '22', '33', '44', '55', '66', '77', '88', '99',
+                    'aa', 'bb', 'cc', 'dd', 'ee', 'ff');
+                const middle = new Array('00', '11', '22', '33', '44', '55', '66', '77', '88', '99',
+                    'aa', 'bb', 'cc', 'dd', 'ee', 'ff');
+                const last = new Array('00', '11', '22', '33', '44', '55', '66', '77', '88', '99',
+                    'aa', 'bb', 'cc', 'dd', 'ee', 'ff');
+
+//从颜色库选取一种颜色;当然这是数组的方式;随机性
+                var beforeColor = Math.floor(Math.random() * before.length);
+                var middleColor = Math.floor(Math.random() * middle.length);
+                var lastColor = Math.floor(Math.random() * last.length);
+                $i.css({
+                    "z-index": 999999999999999999999999999999999999999999999999999999999999999999999,
+                    "top": y - 20,
+                    "left": x,
+                    "position": "absolute",
+                    "font-weight": "bold",
+                    "color":  "#" + before[beforeColor] + middle[middleColor] + last[lastColor], //颜色:绿色
+                });
+                $("body").append($i);
+                $i.animate({
+                        "top": y - 180,
+                        "opacity": 0
+                    },
+                    1500,
+                    function() {
+                        $i.remove();
+                    });
+            });
+        });
+        //显示注销
+        $('.ui.dropdown').dropdown({
+            on: 'hover'
+        });
+    </script>
+    <script>
+        $(document)
+            .ready(function() {
+
+                // fix menu when passed
+                $('.masthead')
+                    .visibility({
+                        once: false,
+                        onBottomPassed: function() {
+                            $('.fixed.menu').transition('fade in');
+                        },
+                        onBottomPassedReverse: function() {
+                            $('.fixed.menu').transition('fade out');
+                        }
+                    })
+                ;
+
+                // create sidebar and attach to menu open
+                $('.ui.sidebar')
+                    .sidebar('attach events', '.toc.item')
+                ;
+
+            })
+        ;
+    </script>
 </head>
 <body>
 
-  <!--导航-->
-  <nav th:replace="_fragments :: menu(1)"/>
-
-  <!--中间内容-->
-  <div id="waypoint" class="m-padded-tb-big animated bounceInUp">
-  <div class="m-padded-tb-big animated fadeIn">
+<!-- Following Menu -->
+<div class="ui inverted large top fixed hidden menu">
     <div class="ui container">
-      <div class="ui stackable grid">
-        <!--博客内容-->
-        <div class="ui vertical segment">
-          <div class="ui m-container-small m-opacity">
-            <div class="ui secondary segment" align="center">
-              <a style="color: black"><i class="bookmark icon"></i>最新文章</a>
-            </div>
-          </div>
-          <!--博文列表-->
-          <div class="ui padded segment m-padded-tb-large m-opacity" th:each="blog : ${page.list}">
-            <div class="ui large aligned mobile reversed stackable grid">
-              <!--博文信息-->
-              <div class="eleven wide column animated fadeIn">
-                <h3 class="ui header" ><a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" class="m-black m-title-font" th:text="${blog.title}">#</a></h3>
-                <p class="m-text m-margin-top-max" th:text="|${blog.description}......|">.</p>
-                <div class="ui m-margin-top-max grid">
-                  <div class="eleven wide column">
-                    <div class="ui horizontal link list">
-                      <div class="item">
-                        <img src="#" th:src="@{${blog.avatar}}"  alt="" class="ui avatar image">
-                        <div class="content"><a href="#" th:href="@{/about}" target="_blank" class="header" th:text="${blog.nickname}" >#</a></div>
-                      </div>
-                      <div class="item">
-                        <a style="color: #919191"><i class="calendar icon"></i><span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd')}">#</span></a>
-                      </div>
-                      <div class="item">
-                        <a style="color: #919191"><i class="eye icon"></i> <span th:text="${blog.view}">2222</span></a>
-                      </div>
-<!--                      <div class="item">-->
-<!--                        <i class="comment outline icon"></i> <span th:text="${blog.commentCount}">2222</span>-->
-<!--                      </div>-->
+        <div class="ui inverted secondary stackable menu">
+            <div id="he-plugin-simple"></div>
+            <h2 class="ui teal header item">Blog</h2>
+            <a href="#" th:href="@{/}" class="m-item item m-mobile-hide" th:classappend="${n==1}?'active'"><i
+                    class="mini home icon"></i>&nbsp;首页</a>
+            <a href="#" th:href="@{/types/-1}" class="m-item item m-mobile-hide" th:classappend="${n==2}?'active'"><i
+                    class="mini idea icon"></i>&nbsp;分类</a>
+            <!--            <a href="#" th:href="@{/tags/-1}" class="m-item item m-mobile-hide" th:classappend="${n==3}?'active'"><i-->
+            <!--                    class="mini tags icon"></i>&nbsp;标签</a>-->
+            <a href="#" th:href="@{/history}" class="m-item item m-mobile-hide" th:classappend="${n==3}?'active'"><i
+                    class="mini clone icon"></i>&nbsp;历史文章</a>
+            <a href="#" th:href="@{/about}" class="m-item item m-mobile-hide" th:classappend="${n==4}?'active'"><i
+                    class="mini user icon"></i>&nbsp;关于我</a>
+            <div class="right m-item item m-mobile-hide"><!--搜索栏条目-->
+                <form name="search" action="/search" th:action="@{/search}" method="post" target="_blank"><!--target="_blank" 新打开标签页-->
+                    <div class="ui icon inverted input"><!--搜索框 transparent透明-->
+                        <input type="text" name="query" placeholder="Search..." value="" th:value="${query}"><!--th:text="${query}" 把搜索字符串返回-->
+                        <i onclick="document.forms['search'].submit()" class="search link icon"></i>
                     </div>
-                  </div>
-                  <div class="right aligned five wide column">
-                    <a href="#" th:href="@{/types/{id}(id=${blog.typeId})}" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin" th:text="${blog.typeName}">#</a>
-                  </div>
-                </div>
-              </div>
-              <!--博文图片-->
-              <div class="five wide column">
-                <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank">
-                  <img src="#" th:src="@{${blog.firstPicture}}" height="200" width="320"  alt="" class="ui rounded image">
-                </a>
-              </div>
+                </form>
             </div>
-          </div>
+            <div class="item m-mobile-hide">
+                <!--                <img class="ui avatar image" th:src="${session.user.username} ? @{/images/catpic.jpg}">-->
+                <!--                <a herf="#" th:href="@{/admin/blogs}" class="m-item item m-mobile-hide" th:text="${session.user} ? ${session.user.username}:'登录'">登录</a>-->
+                <div class="ui dropdown  item">
+                    <div class="text">
+                        <img class="ui avatar image" th:src="${session.user} ? ${session.user.avatar}">
+                        <a th:href="@{/admin/blogs}" th:text="${session.user} ? ${session.user.username}:'登录'" style="color: white">1</a>
+                    </div>
+                    <i class="ui dropdown icon" th:if="${session.user}"></i>
+                    <div class="menu" th:if="${session.user}">
+                        <a href="#" th:href="@{/admin/index}" class="item">个人中心</a>
+                        <a href="#" th:href="@{/admin/logout}" class="item">注销</a>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!--分页-->
-        <div class="ui bottom attached segment m-opacity stackable grid">
-          <div class="three wide column" align="center">
-            <a class="item" th:href="@{/(pageNum=${page.hasPreviousPage}?${page.prePage}:1)}" th:unless="${page.isFirstPage}">上一页</a>
-          </div>
-
-          <div class="ten wide column" align="center">
-            <p> <span th:text="${page.pageNum}"></span> / <span th:text="${page.pages}"></span> </p>
-          </div>
-
-          <div class="three wide column" align="center">
-            <a class="item" th:href="@{/(pageNum=${page.hasNextPage}?${page.nextPage}:${page.pages})}" th:unless="${page.isLastPage}">下一页</a>
-          </div>
+    </div>
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+        <i class="sidebar icon"></i>
+    </a>
+</div>
+<!-- Page Contents -->
+<div class="pusher">
+    <div class="ui inverted vertical masthead center aligned segment">
+        <div class="ui text container">
+            <h1 class="ui inverted header">
+                Welcome to my Blog!
+            </h1>
+            <h2>你想做的时候就去做</h2>
+            <div id="dd" class="ui huge primary button">进入博客 <i class="right arrow icon"></i></div>
         </div>
-      </div>
     </div>
-  </div>
-  <!--最新推荐-->
-  <div class="ui m-padded-tb-large">
-    <div class="ui m-container-small m-opacity">
-      <div class="ui secondary segment " align="center">
-        <a style="color: black"><i class="bookmark icon"></i>看一看</a>
-
-      </div>
-    </div>
-    <div class="ui stackable m-container-mini m-opacity grid">
-      <div class="m-margin-tb-tiny four wide column" th:each="blog : ${recommendBlogs}">
-        <a href="#" class="class_outer" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank">
-          <img src="#" th:src="@{${blog.firstPicture}}" height="200" width="320"  alt="" class="ui rounded image">
-          <span class="class_cover" >
+    <!--最新推荐-->
+    <div class="ui m-padded-tb-large">
+        <div class="ui m-container-small m-opacity">
+            <div class="ui secondary segment " align="center">
+                <a style="color: black"><i class="bookmark icon"></i>看一看</a>
+            </div>
+        </div>
+        <div class="ui stackable m-container-mini m-opacity grid">
+            <div class="m-margin-tb-tiny four wide column" th:each="blog : ${recommendBlogs}">
+                <a href="#" class="class_outer" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank">
+                    <img src="#" th:src="@{${blog.firstPicture}}" height="200" width="320"  alt="" class="ui rounded image">
+                    <span class="class_cover" >
             <h4 class="m-font-size-blog-text m-margin-tb-tiny" th:text="${blog.title}">#</h4>
           </span>
-        </a>
-      </div>
+                </a>
+            </div>
+        </div>
     </div>
-  </div>
-  </div>
-  <div id="toolbar" class="m-padded m-fixed m-left-bottom" style="display: none">
-    <div class="ui vertical icon buttons ">
-      <embed src="//music.163.com/outchain/player?type=2&id=28285910&auto=0&height=66" width="180" height="86"  allowNetworking="all"></embed>
-    </div>
-  </div>
-  <!--底部footer-->
-  <footer th:replace="_fragments :: footer"/>
-  <f th:replace="_fragments :: f"/>
+    <!--中间内容-->
+    <div id="waypoint" class=" m-padded-tb-big animated bounceInUp">
+        <div class="m-container-middle m-padded-tb-big">
+            <div class="ui m-container-small m-opacity">
+                <div class="ui secondary segment " align="center">
+                    <i class="bookmark icon"></i>最新博客
+                </div>
+            </div>
+            <br/>
+            <div class="ui container">
+                <div class="ui stackable grid m-opacity">
+                    <div class="sixteen wide column">
+                        <!--content-->
+                        <div class="ui padded segment m-padded-tb-large  m-mobile-lr-clear" th:each="blog : ${page.list}">
+                            <div class="sixteen wide column" align="center">
+                                <a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank">
+                                    <img style="width: 100%" height="450px" th:src="@{${blog.firstPicture}}" alt="" class="ui rounded image">
+                                </a>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="ui mobile reversed stackable grid">
+                                <div class="sixteen wide column">
+                                    <h1 style="font-size: 35px" class="ui header" align="center"><a href="#" th:href="@{/blog/{id}(id=${blog.id})}" target="_blank" th:text="${blog.title}">SpringBoot与数据访问</a></h1>
+                                    <div class="ui grid" align="center">
+                                        <div class="sixteen wide column">
+                                            <div class="ui horizontal link list">
+                                                <div class="item" title="发布时间">
+                                                    <a style="color: #666d71"><i class="calendar icon"></i><span th:text="${#dates.format(blog.updateTime,'yyyy-MM-dd')}">#</span></a>
+                                                </div>
+                                                <div class="item" title="浏览数">
+                                                    <a style="color: #666d71"><i class="eye icon"></i><span th:text="${blog.view}">71</span></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <br/>
+                                    <p class="m-text" align="center" th:text="|${blog.description}......|">.</p>
+                                    <br/>
+                                    <br/>
+                                    <div class="ui grid">
+                                        <div class="eleven wide column">
+                                            <div class="ui horizontal link list">
+                                                <div class="item">
+                                                    <img th:src="@{${blog.avatar}}" alt="" class="ui avatar image">
+                                                    <div class="content"><a href="#" class="header" th:text="${blog.nickname}">.</a></div>
+                                                </div>
+                                                <!--                                            <div class="item" title="发布时间">-->
+                                                <!--                                                <a><i class="calendar icon"></i><span>2020-04-17</span></a>-->
+                                                <!--                                            </div>-->
+                                                <!--                                            <div class="item" title="浏览数">-->
+                                                <!--                                                <a><i class="eye icon"></i><span>71</span></a>-->
+                                                <!--                                            </div>-->
+                                            </div>
+                                        </div>
+                                        <div class="right aligned five wide column">
+                                            <a href="#" target="_blank" class="ui teal basic label m-padded-tiny m-text-thin" th:text="${blog.typeName}">SpringBoot</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--分页-->
+                        <div class="ui bottom attached segment m-opacity stackable grid">
+                            <div class="four wide column" align="center">
+                                <a class="item" th:href="@{/(pageNum=${page.hasPreviousPage}?1)}" th:unless="${page.isFirstPage}"><button class="ui inverted red button">首页</button></a>
+                                <a class="item" th:href="@{/(pageNum=${page.hasPreviousPage}?${page.prePage}:1)}" th:unless="${page.isFirstPage}"><button class="ui inverted red button">上一页</button></a>
+                            </div>
+                            <!--              <div class="three wide column" align="center">-->
+                            <!--              </div>-->
 
-  <script>
-    $('.menu.toggle').click(function () {
-      $('.m-item').toggleClass('m-mobile-hide');
-    });
+                            <div class="eight wide column" align="center" style="text-align: center">
+                                <p style="margin-top: 10px"> <span th:text="${page.pageNum}"></span> / <span th:text="${page.pages}"></span> </p>
+                            </div>
+
+                            <div class="four wide column" align="center">
+                                <a class="item" th:href="@{/(pageNum=${page.hasNextPage}?${page.nextPage}:${page.pages})}" th:unless="${page.isLastPage}"><button class="ui inverted red button">下一页</button></a>
+                                <a class="item" th:href="@{/(pageNum=${page.hasNextPage}?${page.pages})}" th:unless="${page.isLastPage}"><button class="ui inverted red button">尾页</button></a>
+                            </div>
+                            <!--              <div class="two wide column" align="center">-->
+                            <!--              </div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+<!--    音乐播放器-->
+    <div id="aplayer" class="aplayer" data-id="316722029" data-lrctype="0" data-server="netease" data-type="playlist" data-fixed="true" data-listfolded="true"></div>
+<!--    到顶上-->
+    <div id="toolbar" class="m-padded m-fixed m-right-bottom" style="display: none">
+        <div class="ui vertical icon buttons ">
+            <!--        <a href="#comment-form" class="ui teal button">评论</a>-->
+            <!--        <button class="ui wechat icon button"><i class="weixin icon"></i></button>-->
+            <!--        <div id="toTop-button" class="ui icon button" title="返回顶部"><i class="arrow up icon"></i></div>-->
+            <a title="回到顶部" class="gotop" href="javascript:void(0)"><div class="r-x1 r-x-7"></div></a>
+        </div>
+    </div>
+    <footer class="ui inverted attached segment m-padded-tb-large" style="background: #2c2c2c;">
+        <!--    <iframe frameborder="no" border="0" marginwidth="0" marginheight="0" width=330 height=86 src="//music.163.com/outchain/player?type=2&id=1336864660&auto=1&height=66"></iframe>-->
+        <div class="ui center aligned container">
+            <div class="ui inverted divided grid stackable"><!--作用把页面分为16份-->
+                <!--第一栏二维码-->
+                <div class="three wide column">
+                    <div class="ui inverted link list">
+                        <div class="item">
+                            <img src="#" th:src="@{/images/erweima.png}" class="ui rounded image" style="width: 100px">
+                        </div>
+                    </div>
+                </div>
+                <!--第二栏文字-->
+                <div class="three wide column">
+                    <h4 class="ui inverted  m-text-spaced">快速链接</h4>
+                    <div class="ui inverted link list">
+                        <a href="#" th:href="@{/}" class="item m-text-lined">网站首页（Index）</a>
+                        <!--                    <a href="/about/2" class="item ">网站留言（Bbs）</a>-->
+                    </div>
+                </div>
+                <!--第三栏文字-->
+                <div class="three wide column">
+                    <h4 class="ui inverted m-text-spaced">联系我</h4>
+                    <div class="ui inverted link list">
+                        <a href="#" class="item  m-text-thin m-text-lined" th:text="#{index.email}">#</a>
+                        <a href="#" class="item  m-text-thin" th:text="#{index.qq}">#</a>
+
+                    </div>
+                </div>
+                <!--第四栏文字-->
+                <div class="seven wide column">
+                    <div class="seven wide column">
+                        <h4 class="ui inverted m-text-spaced">Blog</h4>
+                        <p class="m-text-spaced  m-text-lined" th:text="#{index.blogDescription}">#</p>
+                    </div>
+                </div>
+            </div>
+            <!--最底部的线-->
+            <div class="ui inverted section divider m-text-thin">
+                <p class="m-margin-tb-tiny" style="font-size: medium">
+                    Copyright © 2020-<sapn th:text="${#dates.year(#dates.createNow())}">2021</sapn> All Rights Reserved Designed by ZB
+                </p>
+                <span id="timeDate">载入天数...</span><span id="times">载入时分秒...</span>
+            </div>
+        </div>
+    </footer>
+</div>
+<script>
     //滚动检测，根据waypoint来隐藏或显示toolbar
     var waypoint = new Waypoint({
-      element: document.getElementById('waypoint'),
-      handler: function () {
-        $('#toolbar').show(0);
-        console.log('Scrolled to waypoint!  ' + direction);
-      }
+        element: document.getElementById('waypoint'),
+        handler: function (direction) {
+            if (direction == 'down') {
+                $('#toolbar').show(500);
+            } else {
+                $('#toolbar').hide(500);
+            }
+        }
     });
-  </script>
+    $(".gotop").click(function(){
+        if($(window).scrollTop()!=0){
+            $('body,html').stop().animate({scrollTop:700},500);
+            return false;
+        }
+    });
+    $("#dd").click(function() {
+        if($(window).scrollTop()<700){
+            $('body,html').stop().animate({scrollTop:701},500);
+            return false;
+        }
+    });
+</script>
+<script>
+    WIDGET = {
+        CONFIG: {
+            "modules": "01234",
+            "background": 1,
+            "tmpColor": "FFFFFF",
+            "tmpSize": 16,
+            "cityColor": "FFFFFF",
+            "citySize": 16,
+            "aqiSize": 16,
+            "weatherIconSize": 24,
+            "alertIconSize": 18,
+            "padding": "10px 10px 10px 10px",
+            "shadow": "1",
+            "language": "auto",
+            "borderRadius": 5,
+            "fixed": "false",
+            "vertical": "middle",
+            "horizontal": "center",
+            "key": "ac262f2170ff406facc023008bf81f64"
+        }
+    }
+</script>
+<script src="https://widget.heweather.net/simple/static/js/he-simple-common.js?v=1.1"></script>
+<style>
+    #cnzz_stat_icon_1275993213{
+        display:none;
+    }</style>
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1275993213'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s5.cnzz.com/z_stat.php%3Fid%3D1275993213%26online%3D1%26show%3Dline' type='text/javascript'%3E%3C/script%3E"));</script>
+<!-- 音乐播放器 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10.0/dist/APlayer.min.css">
+<script src="https://cdn.jsdelivr.net/npm/aplayer@1.10.0/dist/APlayer.min.js"></script>
+<script src="https://unpkg.com/meting@1.2/dist/Meting.min.js"></script>
+
 </body>
+
 </html>

@@ -33,7 +33,7 @@ public class IndexController {
 
     @GetMapping("/")
     public String index(@RequestParam(defaultValue = "1",value = "pageNum") Integer pageNum,Model model){
-        PageHelper.startPage(pageNum, 10);
+        PageHelper.startPage(pageNum, 3);
         List<FirstPageBlog> allFirstPageBlog = blogService.getAllFirstPageBlog();
         PageInfo<FirstPageBlog> pageInfo = new PageInfo<>(allFirstPageBlog);
         model.addAttribute("page", pageInfo);

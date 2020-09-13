@@ -122,6 +122,9 @@
             var s = document.getElementsByTagName("script")[0];
             s.parentNode.insertBefore(hm, s);
         })();
+        $('.menu.toggle').click(function () {
+            $('.m-item').toggleClass('m-mobile-hide');
+        });
     </script>
     <script>
         var now = new Date();
@@ -184,8 +187,6 @@
             on: 'hover'
         });
     </script>
-
 </f>
 </body>
-
 </html>

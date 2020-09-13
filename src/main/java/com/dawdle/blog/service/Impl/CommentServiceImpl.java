@@ -86,6 +86,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     //    删除评论
+    @Transactional
     @Override
     public void deleteComment(Comment comment,Long id) {
         commentDao.deleteComment(id);
